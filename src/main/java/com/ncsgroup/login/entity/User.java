@@ -2,6 +2,7 @@ package com.ncsgroup.login.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@Builder
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +29,8 @@ public class User {
   @OneToOne
   @JoinColumn(name = "full_name_id")
   private FullName fullName;
+
+  public static User from(String email, String phone){
+    return User.builder().email(email).phone(phone).build();
+  }
 }

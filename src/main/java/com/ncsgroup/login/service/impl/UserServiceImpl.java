@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService {
   private final UserRepository repository;
 
   @Override
-  public User create(User user) {
-    return repository.save(user);
+  public User create(String email, String phone) {
+    return repository.save(User.from(email, phone));
   }
 }

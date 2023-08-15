@@ -1,6 +1,5 @@
 package com.ncsgroup.login.service.impl;
 
-import com.ncsgroup.login.dto.AccountDTO;
 import com.ncsgroup.login.entity.Account;
 import com.ncsgroup.login.exception.DuplicatedUsernameException;
 import com.ncsgroup.login.repository.AccountRepository;
@@ -14,13 +13,13 @@ public class AccountServiceImpl implements AccountService {
   private final AccountRepository repository;
 
   @Override
-  public void create(AccountDTO request) {
-    validateExistByAccount(request.getUsername());
-    repository.save(Account.from(request.getUsername(), request.getPassword()));
+  public void create(String username, String password) {
+    validateExistByAccount(username);
+    repository.save(Account.from(username, password));
   }
 
   private void validateExistByAccount(String username) {
-    if (username.length() > 0 && repository.existsAccountByUsername(username))
-      throw new DuplicatedUsernameException(username);
+    if (username.length() > 0 && repository.existsByUsername(username))
+      throw new DuplicatedUsernameException();
   }
 }
