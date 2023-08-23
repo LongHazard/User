@@ -7,4 +7,8 @@ public interface AccountService {
   AccountResponse create(String username, String password);
 
   void validateExistByAccount(String username);
+
+  void delete(Long accountId);
+
+  void update(Long accountId, String username, String password);
 }

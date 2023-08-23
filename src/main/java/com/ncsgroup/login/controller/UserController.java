@@ -18,22 +18,51 @@ import static com.ncsgroup.login.constant.Constant.LanguageConstants.*;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
-  private final UserFacadeService userFacadeService;
-  private final MessageService messageService;
+    private final UserFacadeService userFacadeService;
+    private final MessageService messageService;
 
-  @PostMapping("/create")
-  public ResponseGeneral<UserResponse> create(
-        @RequestBody @Valid UserRequest request,
-        @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
-  ) {
-    log.info("(create) request: {}", request);
-    UserResponse userResponse = userFacadeService.create(request);
-    return ResponseGeneral.of(
-          HttpStatus.OK.value(),
-          messageService.getMessage(SUCCESS, language),
-          userResponse
-    );
-  }
+    @PostMapping("/create")
+    public ResponseGeneral<UserResponse> create(
+            @RequestBody @Valid UserRequest request,
+            @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
+    ) {
+        log.info("(create) request: {}", request);
+        UserResponse userResponse = userFacadeService.create(request);
+        return ResponseGeneral.of(
+                HttpStatus.OK.value(),
+                messageService.getMessage(SUCCESS, language),
+                userResponse
+        );
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseGeneral<Void> delete(
+            @PathVariable(name = "id") Long userId,
+            @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
+    ) {
+        log.info("(delete) id: {}", userId);
+        userFacadeService.delete(userId);
+        return ResponseGeneral.of(
+                HttpStatus.OK.value(),
+                messageService.getMessage(SUCCESS, language),
+                null
+        );
+    }
+
+    @PutMapping("{id}/update")
+    public ResponseGeneral<Void> update(
+            @PathVariable(name = "id") Long userId,
+            @RequestBody @Valid UserRequest request,
+            @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
+    ) {
+        log.info("(update) id: {}, request: {}", userId, request);
+        userFacadeService.update(userId, request);
+        return ResponseGeneral.of(
+                HttpStatus.OK.value(),
+                messageService.getMessage(SUCCESS, language),
+                null
+        );
+    }
 
 
 }
