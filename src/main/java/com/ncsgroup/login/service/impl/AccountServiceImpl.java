@@ -20,6 +20,6 @@ public class AccountServiceImpl implements AccountService {
 
   private void validateExistByAccount(String username) {
     if (username.length() > 0 && repository.existsByUsername(username))
-      throw new DuplicatedUsernameException();
+      throw new DuplicatedUsernameException(username);
   }
 }

@@ -1,4 +1,4 @@
-package com.ncsgroup.login.dto;
+package com.ncsgroup.login.dto.common;
 
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;

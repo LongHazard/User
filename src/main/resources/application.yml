@@ -8,7 +8,7 @@ spring:
     name: Login
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/LOGIN
+    url: jdbc:postgresql://localhost:5432/Account
     username: postgres
     password: postgres
 

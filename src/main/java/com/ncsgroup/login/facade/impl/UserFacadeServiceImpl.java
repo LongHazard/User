@@ -1,6 +1,6 @@
 package com.ncsgroup.login.facade.impl;
 
-import com.ncsgroup.login.dto.UserRequest;
+import com.ncsgroup.login.dto.request.UserRequest;
 import com.ncsgroup.login.facade.UserFacadeService;
 import com.ncsgroup.login.service.AccountService;
 import com.ncsgroup.login.service.FullNameService;

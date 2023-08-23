@@ -1,10 +1,9 @@
 package com.ncsgroup.login.controller;
 
-import com.ncsgroup.login.dto.request.AccountDTO;
+import com.ncsgroup.login.dto.request.FullNameDTO;
 import com.ncsgroup.login.dto.common.ResponseGeneral;
-import com.ncsgroup.login.service.AccountService;
+import com.ncsgroup.login.service.FullNameService;
 import com.ncsgroup.login.service.MessageService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +12,16 @@ import static com.ncsgroup.login.constant.Constant.LanguageConstants.*;
 
 @Slf4j
 @RestController
-@RequestMapping("account")
+@RequestMapping("full_name")
 @RequiredArgsConstructor
-public class AccountController {
-  private final AccountService accountService;
+public class FullNameController {
+  private final FullNameService fullNameService;
   private final MessageService messageService;
 
   @PostMapping("create")
-  public ResponseGeneral<Void> create(@RequestBody @Valid AccountDTO request,
+  public ResponseGeneral<Void> create(@RequestBody FullNameDTO request,
                                       @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language) {
-    accountService.create(request.getUsername(), request.getPassword());
+    fullNameService.create(request.getFirstName(), request.getMiddleName(), request.getLastName());
     return ResponseGeneral.ofSuccess(messageService.getMessage(SUCCESS, language));
   }
 }

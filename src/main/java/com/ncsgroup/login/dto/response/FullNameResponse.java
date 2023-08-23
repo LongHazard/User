@@ -1,4 +1,4 @@
-package com.ncsgroup.login.dto;
+package com.ncsgroup.login.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -7,21 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class UserRequest {
-  private String email;
-
-  private String phone;
-
-  private String username;
-
-  private String password;
-
+public class FullNameResponse {
+  private Long id;
   private String firstName;
-
   private String middleName;
-
   private String lastName;
 }

@@ -1,9 +1,10 @@
 package com.ncsgroup.login.controller;
 
-import com.ncsgroup.login.dto.ResponseGeneral;
-import com.ncsgroup.login.dto.UserRequest;
+import com.ncsgroup.login.dto.common.ResponseGeneral;
+import com.ncsgroup.login.dto.request.UserRequest;
 import com.ncsgroup.login.facade.UserFacadeService;
 import com.ncsgroup.login.service.MessageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UserController {
 
   @PostMapping("/create")
   public ResponseGeneral<Void> create(
-        @RequestBody UserRequest request,
+        @RequestBody @Valid UserRequest request,
         @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
   ) {
     log.info("(create) request: {}", request);

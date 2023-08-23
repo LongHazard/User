@@ -1,11 +1,12 @@
 package com.ncsgroup.login.exception;
 
-import com.ncsgroup.login.exception.base.BadRequestException;
 import com.ncsgroup.login.exception.base.ConflictException;
 
-public class DuplicatedUsernameException extends BadRequestException {
+public class DuplicatedUsernameException extends ConflictException {
 
-  public DuplicatedUsernameException() {
+  public DuplicatedUsernameException(String objectName) {
+    super(objectName);
     setCode("com.ncsgroup.login.exception.DuplicatedUsernameException");
+    addParam("name", objectName);
   }
 }
