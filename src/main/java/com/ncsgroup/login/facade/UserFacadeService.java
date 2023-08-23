@@ -1,7 +1,8 @@
 package com.ncsgroup.login.facade;
 
 import com.ncsgroup.login.dto.request.UserRequest;
+import com.ncsgroup.login.dto.response.UserResponse;
 
 public interface UserFacadeService {
-  void create(UserRequest request);
+  UserResponse create(UserRequest request);
 }

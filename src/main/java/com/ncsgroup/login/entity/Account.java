@@ -19,7 +19,12 @@ public class Account {
   private String username;
   private String password;
 
-  public static Account from(String username, String password){
+  public static Account from(Long id, String username) {
+    return Account.builder().id(id).username(username).build();
+  }
+
+
+  public static Account of(String username, String password) {
     return Account.builder().username(username).password(password).build();
   }
 

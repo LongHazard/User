@@ -7,18 +7,24 @@ import com.ncsgroup.login.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
   private final AccountRepository repository;
 
   @Override
-  public void create(String username, String password) {
+  public Account create(String username, String password) {
     validateExistByAccount(username);
-    repository.save(Account.from(username, password));
+    var account = repository.save(Account.of(username, password));
+    return Account.from(
+          account.getId(),
+          username
+    );
   }
 
-  private void validateExistByAccount(String username) {
+  @Override
+  public void validateExistByAccount(String username) {
     if (username.length() > 0 && repository.existsByUsername(username))
       throw new DuplicatedUsernameException(username);
   }

@@ -20,6 +20,11 @@ public class UserServiceImpl implements UserService {
     return repository.save(User.from(email, phone));
   }
 
+  @Override
+  public void save(User user) {
+    repository.save(user);
+  }
+
   private void validateExistByEmail(String email) {
     if (email.length() > 0 && repository.existsByEmail(email)) throw new DuplicatedEmailException(email);
   }

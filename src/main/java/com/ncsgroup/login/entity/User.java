@@ -1,5 +1,6 @@
 package com.ncsgroup.login.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +23,14 @@ public class User {
   @Column(name = "phone", unique = true)
   private String phone;
 
-  @OneToOne
-  @JoinColumn(name = "account_id")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "account_id", referencedColumnName = "id")
+  @JsonManagedReference
   private Account account;
 
-  @OneToOne
-  @JoinColumn(name = "full_name_id")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "full_name_id", referencedColumnName = "id")
+  @JsonManagedReference
   private FullName fullName;
 
   public static User from(String email, String phone){

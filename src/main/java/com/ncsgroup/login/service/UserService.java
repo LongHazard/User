@@ -4,4 +4,6 @@ import com.ncsgroup.login.entity.User;
 
 public interface UserService {
   User create(String email, String phone);
+
+  void save(User user);
 }
