@@ -13,9 +13,14 @@ public class FullNameServiceImpl implements FullNameService {
   private final FullNameRepository repository;
 
   @Override
-  public FullName create(String firstName, String middleName, String lastName) {
+  public FullNameResponse create(String firstName, String middleName, String lastName) {
     var fullName = repository.save(FullName.from(firstName, middleName, lastName));
-    return fullName;
+    return FullNameResponse.of(
+          fullName.getId(),
+          firstName,
+          middleName,
+          lastName
+    );
   }
 
 

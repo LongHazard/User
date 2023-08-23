@@ -29,17 +29,17 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     log.info("(create) request: {}", request);
     accountService.validateExistByAccount(request.getUsername());
     User user = userService.create(request.getEmail(), request.getPhone());
-    Account account= accountService.create(request.getUsername(), request.getPassword());
-    FullName fullName = fullNameService.create(request.getFirstName(), request.getMiddleName(), request.getLastName());
-    user.setAccount(account);
-    user.setFullName(fullName);
+    AccountResponse accountResponse= accountService.create(request.getUsername(), request.getPassword());
+    FullNameResponse fullNameResponse = fullNameService.create(request.getFirstName(), request.getMiddleName(), request.getLastName());
+    user.setAccount(MODEL_MAPPER.map(accountResponse, Account.class));
+    user.setFullName(MODEL_MAPPER.map(fullNameResponse, FullName.class));
     userService.save(user);
     return UserResponse.of(
           user.getId(),
           user.getEmail(),
           user.getPhone(),
-          MODEL_MAPPER.map(account, AccountResponse.class),
-          MODEL_MAPPER.map(fullName, FullNameResponse.class)
+          accountResponse,
+          fullNameResponse
     );
   }
 }
