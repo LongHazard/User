@@ -23,7 +23,6 @@ public class HikariConfiguration {
     return instance;
   }
 
-
   // khởi tạo cấu hình cho HIKARI một lần duy nhất
   static {
     HikariConfig hikariConfig = new HikariConfig();

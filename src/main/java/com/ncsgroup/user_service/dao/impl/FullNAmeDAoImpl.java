@@ -3,6 +3,7 @@ package com.ncsgroup.user_service.dao.impl;
 import com.ncsgroup.user_service.dao.FullNameDao;
 import com.ncsgroup.user_service.dao.HikariConfiguration;
 import com.ncsgroup.user_service.entity.FullName;
+import com.ncsgroup.user_service.utils.ConnectionJDBC;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ public class FullNAmeDAoImpl implements FullNameDao {
   @Override
   public FullName create(String fullNameId, String firstName, String middleName, String lastName) {
     String sql = "insert into full_name (id, first_name, middle_name, last_name) values (?,?,?,?)";
-    FullName fullName = null;
+    FullName fullName = new FullName();
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -28,11 +29,16 @@ public class FullNAmeDAoImpl implements FullNameDao {
       statement.setString(2, firstName);
       statement.setString(3, middleName);
       statement.setString(4, lastName);
-      statement.executeUpdate();
+      int rowsAffected =  statement.executeUpdate();
       connection.commit();
       log.info("(create) successfully");
 
-     fullName = findById(fullNameId);
+      if(rowsAffected > 0){
+        fullName.setId(fullNameId);
+        fullName.setFirstName(firstName);
+        fullName.setMiddleName(middleName);
+        fullName.setLastName(lastName);
+      }
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -43,22 +49,7 @@ public class FullNAmeDAoImpl implements FullNameDao {
       }
 
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.setAutoCommit(true);
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
     return fullName;
   }
@@ -79,7 +70,7 @@ public class FullNAmeDAoImpl implements FullNameDao {
       resultSet = statement.executeQuery();
       log.info("(find) successfully");
 
-      while (resultSet.next()){
+      while (resultSet.next()) {
         fullName.setId(resultSet.getString("id"));
         fullName.setFirstName(resultSet.getString("first_name"));
         fullName.setMiddleName(resultSet.getString("middle_name"));
@@ -95,34 +86,10 @@ public class FullNAmeDAoImpl implements FullNameDao {
         throw new RuntimeException(ex);
       }
     } finally {
-      if (resultSet != null) {
-        try {
-          resultSet.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.setAutoCommit(true);
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement, resultSet);
     }
     return fullName;
   }
-
 
 
   @Override
@@ -150,21 +117,7 @@ public class FullNAmeDAoImpl implements FullNameDao {
       }
 
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
   }
 
@@ -195,21 +148,7 @@ public class FullNAmeDAoImpl implements FullNameDao {
       }
 
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
   }
 

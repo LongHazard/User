@@ -3,6 +3,7 @@ package com.ncsgroup.user_service.dao.impl;
 import com.ncsgroup.user_service.dao.AccountDao;
 import com.ncsgroup.user_service.dao.HikariConfiguration;
 import com.ncsgroup.user_service.entity.Account;
+import com.ncsgroup.user_service.utils.ConnectionJDBC;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ public class AccountDaoImpl implements AccountDao {
   @Override
   public Account create(String id, String username, String password) {
     String sql = "insert into account (id, username, password) values (?,?,?)";
-    Account account = null;
+    Account account = new Account();
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -27,11 +28,17 @@ public class AccountDaoImpl implements AccountDao {
       statement.setString(1, id);
       statement.setString(2, username);
       statement.setString(3, password);
-      statement.executeUpdate();
+      int rowsAffected = statement.executeUpdate();
       connection.commit();
       log.info("(create) successfully");
 
-      account = findById(id);
+      if(rowsAffected > 0){
+        account.setId(id);
+        account.setUsername(username);
+        account.setPassword(password);
+      }
+
+//      account = findById(id);
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -41,23 +48,7 @@ public class AccountDaoImpl implements AccountDao {
         throw new RuntimeException(ex);
       }
     } finally {
-
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.setAutoCommit(true);
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
     return account;
   }
@@ -93,30 +84,7 @@ public class AccountDaoImpl implements AccountDao {
         throw new RuntimeException(ex);
       }
     } finally {
-      if (resultSet != null) {
-        try {
-          resultSet.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.setAutoCommit(true);
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement, resultSet);
     }
     return account;
   }
@@ -150,27 +118,7 @@ public class AccountDaoImpl implements AccountDao {
       }
 
     } finally {
-      if (resultSet != null) {
-        try {
-          resultSet.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-      if (preparedStatement != null) {
-        try {
-          preparedStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
+      ConnectionJDBC.closeResources(connection, preparedStatement, resultSet);
     }
     return false;
   }
@@ -235,21 +183,7 @@ public class AccountDaoImpl implements AccountDao {
       }
 
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
   }
 

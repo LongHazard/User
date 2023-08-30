@@ -3,6 +3,7 @@ package com.ncsgroup.user_service.dao.impl;
 import com.ncsgroup.user_service.dao.HikariConfiguration;
 import com.ncsgroup.user_service.dao.UserDao;
 import com.ncsgroup.user_service.entity.User;
+import com.ncsgroup.user_service.utils.ConnectionJDBC;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -40,22 +41,7 @@ public class UserDaoImpl implements UserDao {
         throw new RuntimeException(ex);
       }
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.setAutoCommit(true);
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
   }
 
@@ -93,30 +79,7 @@ public class UserDaoImpl implements UserDao {
         throw new RuntimeException(ex);
       }
     } finally {
-      if (resultSet != null) {
-        try {
-          resultSet.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.setAutoCommit(true);
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement, resultSet);
     }
     return user;
   }
@@ -147,21 +110,7 @@ public class UserDaoImpl implements UserDao {
       }
 
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
   }
 
@@ -191,21 +140,7 @@ public class UserDaoImpl implements UserDao {
       }
 
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      ConnectionJDBC.closeResources(connection, statement);
     }
   }
 
