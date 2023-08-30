@@ -1,15 +1,12 @@
-//package com.ncsgroup.user_service.service;
-//
-//import com.ncsgroup.user_service.entity.User;
-//
-//public interface UserService {
-//  User create(String email, String phone);
-//
-//  void save(User user);
-//
-//  User findById(Long userId);
-//
-//  void delete(Long userId);
-//
-//  void update(Long userId, String email, String phone);
-//}
+package com.ncsgroup.user_service.service;
+
+import com.ncsgroup.user_service.dto.request.UserRequest;
+import com.ncsgroup.user_service.entity.User;
+
+public interface UserService {
+  void create(UserRequest request);
+
+  void delete(String userId);
+
+  void update(String userId, UserRequest request);
+}

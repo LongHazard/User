@@ -1,63 +1,62 @@
 package com.ncsgroup.user_service.controller;
 
 import com.ncsgroup.user_service.dto.common.ResponseGeneral;
-import com.ncsgroup.user_service.dto.request.UserRequest;
+import com.ncsgroup.user_service.dto.request.FullNameDTO;
+import com.ncsgroup.user_service.service.FullNameService;
 import com.ncsgroup.user_service.service.MessageService;
-import com.ncsgroup.user_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
+
 import static com.ncsgroup.user_service.constant.Constant.LanguageConstants.*;
 
-@Slf4j
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api/full_names")
 @RequiredArgsConstructor
-public class UserController {
-  private final UserService userService;
+@Slf4j
+public class FullNameController {
+  private final FullNameService fullNameService;
   private final MessageService messageService;
 
   @PostMapping()
   public ResponseGeneral<Void> create(
-        @RequestBody @Valid UserRequest request,
+        @RequestBody @Valid FullNameDTO request,
         @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
-  ) {
+  ) throws SQLException {
     log.info("(create) request: {}", request);
-
-    userService.create(request);
+    fullNameService.create(request.getFirstName(), request.getMiddleName(), request.getFirstName());
     return ResponseGeneral.ofCreated(
-          messageService.getMessage(SUCCESS, language)
-    );
-  }
-
-  @DeleteMapping("{id}")
-  public ResponseGeneral<Void> delete(
-        @PathVariable(name = "id") String userId,
-        @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
-  ) {
-    log.info("(delete) id: {}", userId);
-    userService.delete(userId);
-
-    return ResponseGeneral.ofSuccess(
           messageService.getMessage(SUCCESS, language)
     );
   }
 
   @PutMapping("{id}")
   public ResponseGeneral<Void> update(
-        @PathVariable(name = "id") String userId,
-        @RequestBody @Valid UserRequest request,
+        @PathVariable(name = "id") String id,
+        @RequestBody @Valid FullNameDTO request,
         @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
   ) {
-    log.info("(update) id: {}, request: {}", userId, request);
-    userService.update(userId, request);
+    log.info("(update) id: {}, request: {}", id, request);
+    fullNameService.update(id, request.getFirstName(), request.getMiddleName(), request.getLastName());
 
     return ResponseGeneral.ofSuccess(
           messageService.getMessage(SUCCESS, language)
     );
   }
 
+  @DeleteMapping("{id}")
+  public ResponseGeneral<Void> delete(
+        @PathVariable(name = "id") String id,
+        @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
+  ) {
+    log.info("(delete) id: {}", id);
+    fullNameService.delete(id);
 
+    return ResponseGeneral.ofSuccess(
+          messageService.getMessage(SUCCESS, language)
+    );
+  }
 }

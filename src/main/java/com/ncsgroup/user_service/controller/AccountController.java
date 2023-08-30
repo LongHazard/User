@@ -33,4 +33,31 @@ public class AccountController {
     );
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseGeneral<Void> delete(
+        @PathVariable(name = "id") String id,
+        @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
+  ) {
+
+    accountService.delete(id);
+    return ResponseGeneral.ofCreated(
+          messageService.getMessage(SUCCESS, language)
+    );
+  }
+
+  @PutMapping("{id}")
+  public ResponseGeneral<Void> update(
+        @PathVariable(name = "id") String id,
+        @RequestBody @Valid AccountDTO request,
+        @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
+  ) {
+    log.info("(update) id: {}, request: {}", id, request);
+    accountService.update(id, request.getUsername(), request.getPassword());
+
+    return ResponseGeneral.ofSuccess(
+          messageService.getMessage(SUCCESS, language)
+    );
+  }
+
+
 }

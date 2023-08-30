@@ -1,13 +1,17 @@
 package com.ncsgroup.user_service.dao;
 
+import com.ncsgroup.user_service.entity.Account;
+
 import java.sql.SQLException;
 
 public interface AccountDao {
-  void create(String id, String username, String password) ;
+  Account create(String id, String username, String password) ;
+
+  Account findById(String id);
 
   boolean validateExistByAccount(String username);
 
-  void delete(Long accountId) throws SQLException;
+  void delete(String accountId);
 
-  void update(Long accountId, String username, String password) throws SQLException;
+  void update(String accountId, String username, String password);
 }

@@ -1,8 +1,8 @@
 package com.ncsgroup.user_service.dao.impl;
 
-import com.ncsgroup.user_service.dao.AccountDao;
+import com.ncsgroup.user_service.dao.FullNameDao;
 import com.ncsgroup.user_service.dao.HikariConfiguration;
-import com.ncsgroup.user_service.entity.Account;
+import com.ncsgroup.user_service.entity.FullName;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -11,11 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Slf4j
-public class AccountDaoImpl implements AccountDao {
+public class FullNAmeDAoImpl implements FullNameDao {
   @Override
-  public Account create(String id, String username, String password) {
-    String sql = "insert into account (id, username, password) values (?,?,?)";
-    Account account = null;
+  public FullName create(String fullNameId, String firstName, String middleName, String lastName) {
+    String sql = "insert into full_name (id, first_name, middle_name, last_name) values (?,?,?,?)";
+    FullName fullName = null;
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -24,14 +24,15 @@ public class AccountDaoImpl implements AccountDao {
       connection.setAutoCommit(false);
 
       statement = connection.prepareStatement(sql);
-      statement.setString(1, id);
-      statement.setString(2, username);
-      statement.setString(3, password);
+      statement.setString(1, fullNameId);
+      statement.setString(2, firstName);
+      statement.setString(3, middleName);
+      statement.setString(4, lastName);
       statement.executeUpdate();
       connection.commit();
       log.info("(create) successfully");
 
-      account = findById(id);
+     fullName = findById(fullNameId);
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -40,8 +41,8 @@ public class AccountDaoImpl implements AccountDao {
       } catch (SQLException ex) {
         throw new RuntimeException(ex);
       }
-    } finally {
 
+    } finally {
       if (statement != null) {
         try {
           statement.close();
@@ -59,13 +60,13 @@ public class AccountDaoImpl implements AccountDao {
         }
       }
     }
-    return account;
+    return fullName;
   }
 
   @Override
-  public Account findById(String id) {
-    Account account = new Account();
-    String sql = "select * from account where id = ?";
+  public FullName findById(String id) {
+    FullName fullName = new FullName();
+    String sql = "select * from full_name where id = ?";
     Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultSet = null;
@@ -73,17 +74,18 @@ public class AccountDaoImpl implements AccountDao {
     try {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
-
       statement = connection.prepareStatement(sql);
       statement.setString(1, id);
       resultSet = statement.executeQuery();
       log.info("(find) successfully");
 
-      while (resultSet.next()) {
-        account.setId(resultSet.getString("id"));
-        account.setUsername(resultSet.getString("username"));
-        account.setPassword(resultSet.getString("password"));
+      while (resultSet.next()){
+        fullName.setId(resultSet.getString("id"));
+        fullName.setFirstName(resultSet.getString("first_name"));
+        fullName.setMiddleName(resultSet.getString("middle_name"));
+        fullName.setLastName(resultSet.getString("last_name"));
       }
+
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -118,87 +120,44 @@ public class AccountDaoImpl implements AccountDao {
         }
       }
     }
-    return account;
+    return fullName;
   }
 
+
+
   @Override
-  public boolean validateExistByAccount(String username) {
-    String sql = "select count(*) from account where username = ?";
+  public void delete(String fullNameId) {
+    String sql = "delete from full_name where id = ?";
     Connection connection = null;
-    PreparedStatement preparedStatement = null;
-    ResultSet resultSet = null;
+    PreparedStatement statement = null;
 
     try {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
-      preparedStatement = connection.prepareStatement(sql);
-      preparedStatement.setString(1, username);
-      resultSet = preparedStatement.executeQuery();
 
-      if (resultSet.next()) {
-        int count = resultSet.getInt(1);
-        return count > 0;
-      }
-
-    } catch (SQLException e) {
-
-      log.error("(validateExistByAccount) exception: {}", e.getMessage());
-      try {
-        connection.rollback();
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
-
-    } finally {
-      if (resultSet != null) {
-        try {
-          resultSet.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-      if (preparedStatement != null) {
-        try {
-          preparedStatement.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public void delete(String accountId) {
-    String sql = "delete from account where id = ?";
-    Connection connection = null;
-    try {
-      connection = HikariConfiguration.getInstance().getConnection();
-      connection.setAutoCommit(false);
-
-      PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, accountId);
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, fullNameId);
       statement.executeUpdate();
       connection.commit();
-      log.info("(delete) id: {} successfully", accountId);
+      log.info("(delete) id: {} successfully", fullNameId);
 
     } catch (SQLException e) {
       log.error("(delete) exception: {}", e.getMessage());
       try {
-
         connection.rollback();
       } catch (SQLException ex) {
         throw new RuntimeException(ex);
       }
 
     } finally {
+      if (statement != null) {
+        try {
+          statement.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
+
       if (connection != null) {
         try {
           connection.close();
@@ -210,8 +169,8 @@ public class AccountDaoImpl implements AccountDao {
   }
 
   @Override
-  public void update(String accountId, String username, String password) {
-    String sql = "update account set username = ?, \"password\" = ? where id = ?";
+  public void update(String fullNameId, String firstName, String middleName, String lastName) {
+    String sql = "update full_name set first_name = ?, middle_name = ?, last_name = ? where id = ?";
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -219,12 +178,13 @@ public class AccountDaoImpl implements AccountDao {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
       statement = connection.prepareStatement(sql);
-      statement.setString(1, username);
-      statement.setString(2, password);
-      statement.setString(3, accountId);
+      statement.setString(1, firstName);
+      statement.setString(2, middleName);
+      statement.setString(3, lastName);
+      statement.setString(4, fullNameId);
       statement.executeUpdate();
       connection.commit();
-      log.info("(update) id: {} successfully", accountId);
+      log.info("(update) id: {} successfully", fullNameId);
 
     } catch (SQLException e) {
       log.error("(update) exception: {}", e.getMessage());

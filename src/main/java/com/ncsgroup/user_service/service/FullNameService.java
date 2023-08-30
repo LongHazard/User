@@ -1,11 +1,12 @@
 package com.ncsgroup.user_service.service;
 
 import com.ncsgroup.user_service.dto.response.FullNameResponse;
+import com.ncsgroup.user_service.entity.FullName;
 
 public interface FullNameService {
-  FullNameResponse create(String firstName, String middleName, String lastName);
+  FullName create(String firstName, String middleName, String lastName);
 
-  void delete(Long fullNameId);
+  void delete(String fullNameId);
 
-  void update(Long fullNameId, String firstName, String middleName, String lastName);
+  void update(String fullNameId, String firstName, String middleName, String lastName);
 }
