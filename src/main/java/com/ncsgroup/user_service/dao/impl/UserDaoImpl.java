@@ -11,11 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.ncsgroup.user_service.constant.Constant.QueryOfMysql.*;
+
 @Slf4j
 public class UserDaoImpl implements UserDao {
   @Override
-  public void create(String id, String email, String phone, String accountId, String fullNameId) {
-    String sql = "insert into users  (id, email, phone, account_id, full_name_id) values  (?,?,?,?,?)";
+  public User create(String id, String email, String phone, String accountId, String fullNameId) {
+    User user = new User();
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -23,19 +25,26 @@ public class UserDaoImpl implements UserDao {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
 
-      statement = connection.prepareStatement(sql);
+      statement = connection.prepareStatement(CREATE_USER);
       statement.setString(1, id);
       statement.setString(2, email);
       statement.setString(3, phone);
       statement.setString(4, accountId);
       statement.setString(5, fullNameId);
-      statement.executeUpdate();
+      int rowsAffected = statement.executeUpdate();
       connection.commit();
       log.info("(create) successfully");
 
+      if (rowsAffected > 0) {
+        user.setId(id);
+        user.setEmail(email);
+        user.setPhone(phone);
+      }
+
     } catch (SQLException e) {
-      e.printStackTrace();
+      log.error("(create) exception: {}", e.getMessage());
       try {
+        assert connection != null;
         connection.rollback();
       } catch (SQLException ex) {
         throw new RuntimeException(ex);
@@ -43,13 +52,13 @@ public class UserDaoImpl implements UserDao {
     } finally {
       ConnectionJDBC.closeResources(connection, statement);
     }
+    return user;
   }
 
 
   @Override
   public User findById(String userId) {
     User user = new User();
-    String sql = "select * from users where id = ?";
     Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultSet = null;
@@ -58,7 +67,7 @@ public class UserDaoImpl implements UserDao {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
 
-      statement = connection.prepareStatement(sql);
+      statement = connection.prepareStatement(GET_USER_BY_ID);
       statement.setString(1, userId);
       resultSet = statement.executeQuery();
       log.info("(find) successfully");
@@ -72,8 +81,9 @@ public class UserDaoImpl implements UserDao {
       }
 
     } catch (SQLException e) {
-      e.printStackTrace();
+      log.error("(find) exception: {}", e.getMessage());
       try {
+        assert connection != null;
         connection.rollback();
       } catch (SQLException ex) {
         throw new RuntimeException(ex);
@@ -86,7 +96,7 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public void delete(String userId) {
-    String sql = "delete from users where id = ?";
+
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -94,7 +104,7 @@ public class UserDaoImpl implements UserDao {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
 
-      statement = connection.prepareStatement(sql);
+      statement = connection.prepareStatement(DELETE_USER);
       statement.setString(1, userId);
       statement.executeUpdate();
       connection.commit();
@@ -104,6 +114,7 @@ public class UserDaoImpl implements UserDao {
       log.error("(delete) exception: {}", e.getMessage());
       try {
 
+        assert connection != null;
         connection.rollback();
       } catch (SQLException ex) {
         throw new RuntimeException(ex);
@@ -116,14 +127,14 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public void update(String id, String email, String phone) {
-    String sql = "update users set email = ?, phone = ? where id = ?";
+
     Connection connection = null;
     PreparedStatement statement = null;
 
     try {
       connection = HikariConfiguration.getInstance().getConnection();
       connection.setAutoCommit(false);
-      statement = connection.prepareStatement(sql);
+      statement = connection.prepareStatement(UPDATE_USER_BY_ID);
       statement.setString(1, email);
       statement.setString(2, phone);
       statement.setString(3, id);
@@ -134,6 +145,7 @@ public class UserDaoImpl implements UserDao {
     } catch (SQLException e) {
       log.error("(update) exception: {}", e.getMessage());
       try {
+        assert connection != null;
         connection.rollback();
       } catch (SQLException ex) {
         throw new RuntimeException(ex);

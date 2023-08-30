@@ -8,5 +8,5 @@ public interface FullNameService {
 
   void delete(String fullNameId);
 
-  void update(String fullNameId, String firstName, String middleName, String lastName);
+  FullNameResponse update(String fullNameId, String firstName, String middleName, String lastName);
 }

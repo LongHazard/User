@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FullNameResponse {
-  private Long id;
+  private String id;
   private String firstName;
   private String middleName;
   private String lastName;

@@ -2,6 +2,7 @@ package com.ncsgroup.user_service.controller;
 
 import com.ncsgroup.user_service.dto.common.ResponseGeneral;
 import com.ncsgroup.user_service.dto.request.UserRequest;
+import com.ncsgroup.user_service.dto.response.UserResponse;
 import com.ncsgroup.user_service.service.MessageService;
 import com.ncsgroup.user_service.service.UserService;
 import jakarta.validation.Valid;
@@ -20,15 +21,14 @@ public class UserController {
   private final MessageService messageService;
 
   @PostMapping()
-  public ResponseGeneral<Void> create(
+  public ResponseGeneral<UserResponse> create(
         @RequestBody @Valid UserRequest request,
         @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
   ) {
     log.info("(create) request: {}", request);
-
-    userService.create(request);
     return ResponseGeneral.ofCreated(
-          messageService.getMessage(SUCCESS, language)
+          messageService.getMessage(SUCCESS, language),
+          userService.create(request)
     );
   }
 
@@ -46,16 +46,16 @@ public class UserController {
   }
 
   @PutMapping("{id}")
-  public ResponseGeneral<Void> update(
+  public ResponseGeneral<UserResponse> update(
         @PathVariable(name = "id") String userId,
         @RequestBody @Valid UserRequest request,
         @RequestHeader(name = LANGUAGE, defaultValue = DEFAULT_LANGUAGE) String language
   ) {
     log.info("(update) id: {}, request: {}", userId, request);
-    userService.update(userId, request);
 
     return ResponseGeneral.ofSuccess(
-          messageService.getMessage(SUCCESS, language)
+          messageService.getMessage(SUCCESS, language),
+          userService.update(userId, request)
     );
   }
 

@@ -4,7 +4,7 @@ import com.ncsgroup.user_service.dao.AccountDao;
 import com.ncsgroup.user_service.dao.FullNameDao;
 import com.ncsgroup.user_service.dao.UserDao;
 import com.ncsgroup.user_service.dao.impl.AccountDaoImpl;
-import com.ncsgroup.user_service.dao.impl.FullNAmeDAoImpl;
+import com.ncsgroup.user_service.dao.impl.FullNameDaoImpl;
 import com.ncsgroup.user_service.dao.impl.UserDaoImpl;
 import com.ncsgroup.user_service.service.AccountService;
 import com.ncsgroup.user_service.service.FullNameService;
@@ -38,7 +38,7 @@ public class LoginConfiguration {
 
   @Bean
   public FullNameDao fullNameDao() {
-    return new FullNAmeDAoImpl();
+    return new FullNameDaoImpl();
   }
 
   @Bean

@@ -1,12 +1,13 @@
 package com.ncsgroup.user_service.service;
 
 import com.ncsgroup.user_service.dto.request.UserRequest;
+import com.ncsgroup.user_service.dto.response.UserResponse;
 import com.ncsgroup.user_service.entity.User;
 
 public interface UserService {
-  void create(UserRequest request);
+  UserResponse create(UserRequest request);
 
   void delete(String userId);
 
-  void update(String userId, UserRequest request);
+  UserResponse update(String userId, UserRequest request);
 }

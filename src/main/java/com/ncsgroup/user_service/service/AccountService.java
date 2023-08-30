@@ -1,5 +1,6 @@
 package com.ncsgroup.user_service.service;
 
+import com.ncsgroup.user_service.dto.response.AccountResponse;
 import com.ncsgroup.user_service.entity.Account;
 
 public interface AccountService {
@@ -9,5 +10,5 @@ public interface AccountService {
 
   void delete(String accountId);
 
-  void update(String accountId, String username, String password);
+  AccountResponse update(String accountId, String username, String password);
 }

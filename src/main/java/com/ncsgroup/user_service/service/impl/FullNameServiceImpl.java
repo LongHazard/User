@@ -1,6 +1,7 @@
 package com.ncsgroup.user_service.service.impl;
 
 import com.ncsgroup.user_service.dao.FullNameDao;
+import com.ncsgroup.user_service.dto.response.FullNameResponse;
 import com.ncsgroup.user_service.entity.FullName;
 import com.ncsgroup.user_service.service.FullNameService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class FullNameServiceImpl implements FullNameService {
   }
 
   @Override
-  public void update(String fullNameId, String firstName, String middleName, String lastName) {
-    fullNameDao.update(fullNameId, firstName, middleName, lastName);
+  public FullNameResponse update(String fullNameId, String firstName, String middleName, String lastName) {
+    return fullNameDao.update(fullNameId, firstName, middleName, lastName);
   }
 }

@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 @Builder
 public class AccountResponse {
-  private Long id;
+  private String id;
   private String username;
 
-  public static AccountResponse from(Long id, String username){
+  public static AccountResponse from(String id, String username){
     return AccountResponse.builder().id(id).username(username).build();
   }
 }

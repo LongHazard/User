@@ -6,6 +6,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.ncsgroup.user_service.constant.Constant.ConfigConstant.*;
+
 
 public class HikariConfiguration {
   // khai báo 1 biến instance
@@ -26,10 +28,10 @@ public class HikariConfiguration {
   // khởi tạo cấu hình cho HIKARI một lần duy nhất
   static {
     HikariConfig hikariConfig = new HikariConfig();
-    hikariConfig.setDriverClassName("org.postgresql.Driver");
-    hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5432/JDBC");
-    hikariConfig.setUsername("postgres");
-    hikariConfig.setPassword("postgres");
+    hikariConfig.setDriverClassName(DRIVER_CLASS_NAME);
+    hikariConfig.setJdbcUrl(URL);
+    hikariConfig.setUsername(USER_NAME);
+    hikariConfig.setPassword(PASSWORD);
     // tắt tự động commit
     hikariConfig.setAutoCommit(false);
     // tên cho Pool kết nối
